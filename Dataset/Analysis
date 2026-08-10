@@ -1,0 +1,173 @@
+PanNuke Dataset Analysis 
+
+We have completed the dataset analysis for the PanNuke dataset that we'll use for the project.
+
+1. Dataset structure
+
+We are using the original three PanNuke folds:
+
+PanNuke
+├── Fold 1 → Training
+├── Fold 2 → Validation
+└── Fold 3 → Testing
+Split	Images	Nuclei
+Fold 1 — Train	2,656	63,218
+Fold 2 — Validation	2,523	59,872
+Fold 3 — Test	2,722	66,654
+Total	7,901	189,744
+
+Each image is:
+
+256 × 256 × 3
+
+and represents an H&E-stained histopathology image patch.
+
+2. Data files
+
+Each fold contains:
+
+images.npy
+masks.npy
+types.npy
+images.npy
+Shape: (N, 256, 256, 3)
+dtype: float64
+
+Contains the RGB H&E histopathology images.
+
+The observed pixel range is approximately:
+
+28 → 255
+types.npy
+Shape: (N,)
+dtype: <U13
+
+This contains one tissue type per image, not one label per nucleus.
+
+There are 19 tissue types, including:
+
+Breast
+Colon
+Liver
+Lung
+Kidney
+Cervix
+Prostate
+...
+
+The distribution is imbalanced, with Breast and Colon being the most common.
+
+For example, across all folds:
+
+Breast → 2,351 images
+Colon  → 1,440 images
+
+We will treat types.npy primarily as metadata, not as the target for our nucleus classification task.
+
+3. masks.npy
+
+This is the most important annotation file.
+
+Shape:
+(N, 256, 256, 6)
+
+There are six channels:
+
+Channel 0 → Neoplastic
+Channel 1 → Inflammatory
+Channel 2 → Connective
+Channel 3 → Dead
+Channel 4 → Epithelial
+Channel 5 → Background
+
+Channels 0–4 contain instance IDs, not probabilities.
+
+For example:
+
+0 0 7 7 0
+0 7 7 7 0
+0 0 7 0 0
+
+means all pixels with value 7 belong to one nucleus instance.
+
+Therefore:
+
+100 pixels with ID 7
+        ↓
+1 nucleus
+
+while:
+
+100 pixels with ID 7
++
+150 pixels with ID 12
+        ↓
+2 nuclei
+
+This is how we calculated the nucleus-level class distribution.
+
+4. Pixel-level imbalance
+
+The masks are highly sparse.
+
+For example, in Fold 1:
+
+Class	Non-zero pixel %
+Neoplastic	9.03%
+Inflammatory	1.79%
+Connective	3.70%
+Dead	0.065%
+Epithelial	2.45%
+Background channel	81.61%
+
+Therefore, most pixels do not belong to a particular nucleus class.
+
+This is expected in histopathology segmentation because nuclei occupy relatively small regions of the image.
+
+5. Nucleus-level class distribution
+
+This is more important for our classification branch.
+
+Across all three folds:
+
+Nucleus class	Total nuclei	Percentage
+Neoplastic	77,403	40.8%
+Connective	50,585	26.7%
+Inflammatory	32,276	17.0%
+Epithelial	26,572	14.0%
+Dead	2,908	1.5%
+Total	189,744	100%
+
+The major issue is class imbalance.
+
+There are approximately:
+
+77,403 Neoplastic
+        vs
+ 2,908 Dead
+
+So Neoplastic nuclei are roughly 26.6× more numerous than Dead nuclei.
+
+This means we should consider class-weighted loss for the per-nucleus classification branch.
+
+6. Important distinction we established
+
+There are two different statistics:
+
+Pixel-level statistic
+9.03% Neoplastic pixels
+
+means:
+
+9.03% of all pixels belong to Neoplastic nucleus instances.
+
+Instance-level statistic
+26,201 Neoplastic nuclei in Fold 1
+
+means:
+
+There are 26,201 individual Neoplastic nucleus instances.
+
+These are not interchangeable.
+
+This distinction is critical because our eventual task is instance segmentation followed by per-nucleus classification.
