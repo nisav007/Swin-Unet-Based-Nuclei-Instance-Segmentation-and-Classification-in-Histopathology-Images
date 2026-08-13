@@ -345,8 +345,10 @@ Median vote spread  : 5.03 px
 ```
 
 Example:
-```
+
 Nucleus 4
+```
+
 
 GT center        : (192.27, 112.38)
 Predicted center : (188.89, 110.95)
