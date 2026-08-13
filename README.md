@@ -2,7 +2,7 @@
 
 Deep learning pipeline for detecting, separating, and classifying nuclei in histopathology images using a Swin-Unet based segmentation model and center-voting based instance separation.
 
-## Problem
+## Problem Statement
 
 Nuclei in histopathology images frequently touch or overlap.
 
