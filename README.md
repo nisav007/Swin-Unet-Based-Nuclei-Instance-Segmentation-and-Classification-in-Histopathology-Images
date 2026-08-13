@@ -78,24 +78,26 @@ Classification — use Swin features from each detected nucleus to predict its c
 
 ## Dataset
 The PanNuke dataset is a semi-automatically generated pathology dataset for nuclear instance segmentation, comprehensively covering nuclear labels of 19 different tissue types. The dataset contains a total of 7,904 images and 205,343 annotated nuclei, each with an instance segmentation mask and corresponding cell type labels (tumor epithelial cells, inflammatory cells, connective tissue cells) 
-```
-256 × 256
-```
-The training pipeline uses:
 
+The training pipeline uses:
+```
 Histopathology image
 Binary nuclear mask
 Instance-level nucleus map
 Horizontal displacement map
 Vertical displacement map
 Nucleus class labels for classification
+```
 
 Images are processed at:
 
+```
+256 × 256
+```
 
 ## Model
 
-Swin-Unet
+### Swin-Unet
 
 The segmentation model uses a Swin Transformer encoder with a U-Net style decoder.
 
@@ -111,17 +113,17 @@ The decoder produces shared spatial features that are passed to three prediction
        Mask P(x,y)    H(x,y)       V(x,y)
 ```
 
-Mask Head
+### Mask Head
 
 Predicts whether each pixel belongs to a nucleus.
 
-H/V Heads
+### H/V Heads
 
 Predict the displacement from each nucleus pixel toward its corresponding nucleus center.
 
 These fields provide the additional geometric information required to separate touching nuclei.
 
-Center Voting
+### Center Voting
 
 For every predicted nuclear pixel (x, y), the model predicts:
 ``` text
@@ -158,33 +160,33 @@ For two touching nuclei, the desired behavior is to produce two different vote c
 ```
 This allows a connected nuclear mask to be converted into separate instances.
 
-Inference Pipeline
+## Inference Pipeline
 
 After training, the model produces:
 ```
 Mask + H + V
 ```
-1. Generate Nuclear Mask
+### 1. Generate Nuclear Mask
 
 The predicted mask probability is thresholded to obtain foreground nuclear pixels.
 
-2. Generate Center Votes
+### 2. Generate Center Votes
 
 Each predicted foreground pixel is converted into a predicted center using its H/V values.
 
-3. Build Vote Map
+### 3. Build Vote Map
 
 All center votes are accumulated into a 2D vote map.
 
 Dense regions in the vote map represent likely nucleus centers.
 
-4. Detect Centers
+### 4. Detect Centers
 
 The vote map is smoothed and local maxima are detected.
 
 Each strong peak represents a predicted nucleus center.
 
-5. Build Instance Map
+### 5. Build Instance Map
 
 Each predicted nuclear pixel is assigned to the closest detected center based on its predicted center vote.
 
@@ -198,11 +200,12 @@ The resulting instance map contains:
 
 This allows touching nuclei to be separated without relying only on connected components.
 
-Classification
+## Classification
 
 Once individual nucleus instances are available, the learned Swin features are used for nucleus classification.
 
 Instead of using a single pixel or simple RGB statistics, features from the entire nucleus region are aggregated.
+
 ```
 Swin Feature Map
        |
@@ -220,21 +223,24 @@ Swin Feature Map
                     v
               Nucleus Class
 ```
+
 For each nucleus instance, the corresponding instance mask is projected onto the Swin feature map and used to pool the features inside that nucleus.
 
 This produces one feature vector representing the complete nucleus.
 
 The representation captures information such as:
 
+```
 Nucleus shape
 Texture
 Appearance
 Local spatial context
 Learned semantic features
+```
 
 The resulting feature vector is passed to the classification head to predict the nucleus type.
 
-Loss
+## Loss
 
 The segmentation model uses a multi-task loss:
 ```
@@ -245,15 +251,15 @@ Total Loss =
   + 2 × V Loss
   + Center Consistency Loss
 ```
-Mask BCE
+### Mask BCE
 
 Binary cross-entropy trains the mask head to distinguish nuclear pixels from background.
 
-Dice Loss
+### Dice Loss
 
 Dice loss improves overlap between predicted and ground-truth nuclear regions.
 
-H/V Loss
+### H/V Loss
 
 Regression losses train the horizontal and vertical displacement fields.
 
@@ -262,7 +268,7 @@ H prediction → horizontal center direction
 V prediction → vertical center direction
 ```
 
-Center Consistency Loss
+### Center Consistency Loss
 
 For each nucleus instance, center votes are calculated for its pixels.
 
