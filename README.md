@@ -26,8 +26,9 @@ For downstream analysis, we need:
    AAAAAAABBBBBBB
 
 where each nucleus is represented as a separate instance and can then be classified.
+''' text
 
-Solution
+## Solution
 
 The model predicts three outputs from the same Swin-Unet backbone:
 
