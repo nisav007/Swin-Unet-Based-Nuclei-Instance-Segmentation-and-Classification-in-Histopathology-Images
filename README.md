@@ -413,9 +413,9 @@ Matplotlib
 ## Key Features
 
 ```
-Swin Transformer based feature extraction
+Swin Transformer based Encoder for feature extraction
 U-Net style decoder
-Three-head nuclear segmentation
+Three-head nuclear segmentation [Mask, H ,V]
 H/V center displacement prediction
 Center-voting based instance separation
 Designed to handle touching nuclei
