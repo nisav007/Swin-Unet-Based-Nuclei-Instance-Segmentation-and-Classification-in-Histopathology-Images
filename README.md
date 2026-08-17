@@ -2,7 +2,7 @@
 
 Deep learning pipeline for detecting, separating, and classifying nuclei in histopathology images using a Swin-Unet based segmentation model and center-voting based instance separation.
 
-## Problem Statement
+## Challenge
 
 Nuclei in histopathology images frequently touch or overlap.
 
@@ -34,19 +34,16 @@ Where:
 2 = Nucleus 2
 ```
 where each nucleus is represented as a separate instance and can then be classified.
-
 ## Dataset
-The PanNuke dataset is a semi-automatically generated pathology dataset for nuclear instance segmentation, comprehensively covering nuclear labels of 19 different tissue types. The dataset contains a total of 7,904 images and 205,343 annotated nuclei, each with an instance segmentation mask and corresponding cell type labels (tumor epithelial cells, inflammatory cells, connective tissue cells) 
+The PanNuke dataset is a large-scale pathology dataset designed for nuclear instance segmentation and classification, containing annotated nuclei from 19 different tissue types. It consists of 7,904 histopathology image patches and 205,343 annotated nuclei, with each nucleus having an instance segmentation mask and a corresponding cell-type label.
 
-The training pipeline uses:
-```
-Histopathology image
-Binary nuclear mask
-Instance-level nucleus map
-Horizontal displacement map
-Vertical displacement map
-Nucleus class labels for classification
-```
+The dataset is divided into three folds, with each fold containing approximately 2,600 images and around 70,000 annotated nuclei. The nuclei are categorized into five classes:
+
+Neoplastic
+Non-neoplastic epithelial
+Inflammatory
+Connective
+Dead cells
 
 Images are processed at:
 
