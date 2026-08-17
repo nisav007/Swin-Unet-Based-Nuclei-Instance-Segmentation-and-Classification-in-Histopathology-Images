@@ -64,35 +64,89 @@ H — predicts horizontal displacement toward the nucleus center
 V — predicts vertical displacement toward the nucleus center
 
 The H/V predictions are converted into center votes during inference.
+
+### Segmentation model training
+
+
 ```text
-Image
-  |
-  v
-Swin Transformer + U-Net Decoder
-  |
-  +------ Mask
-  |
-  +------ H
-  |
-  +------ V
-           |
-           v
-      Center Votes
-           |
-           v
-      Center Detection
-           |
-           v
-      Instance Map
-           |
-           v
-   Individual Nuclei
-           |
-           v
-   Swin Feature Pooling
-           |
-           v
-     Classification
+                         Input Image
+                              |
+                              v
+                 +-----------------------+
+                 |   Swin-Tiny Encoder   |
+                 +-----------------------+
+                              |
+                              v
+                 +-----------------------+
+                 |    U-Net Decoder      |
+                 +-----------------------+
+                              |
+                              v
+                 +-----------------------+
+                 |   Shared Features     |
+                 +-----------------------+
+                              |
+              +---------------+---------------+
+              |               |               |
+              v               v               v
+        +-----------+   +-----------+   +-----------+
+        | Mask Head |   |  H Head   |   |  V Head   |
+        +-----------+   +-----------+   +-----------+
+              |               |               |
+              v               v               v
+        Mask Prediction     H_pred          V_pred
+              |               |               |
+              |               +-------+-------+
+              |                       |
+              v                       v
+        BCE + Dice Loss       Center Consistency
+                                     Loss
+                                      |
+                                      v
+                               Backpropagation
+```
+### Classification model training
+```
+
+             TRAINING IMAGE
+                    |
+                    v
+          +-------------------+
+          | Trained Swin      |
+          | Encoder           |
+          +-------------------+
+                    |
+                    v
+             Swin Feature Maps
+                    |
+                    + <--------- Ground-truth
+                    |             Instance Mask
+                    v
+          +-------------------+
+          | Masked Feature    |
+          | Pooling            |
+          +-------------------+
+                    |
+                    v
+          Nucleus Embedding
+              (1344-D)
+                    |
+                    + <--------- Ground-truth
+                    |             Nucleus Class
+                    v
+          +-------------------+
+          | Classification    |
+          | FC Neural Network |
+          +-------------------+
+                    |
+                    v
+              Predicted Class
+                    |
+                    v
+            Cross-Entropy Loss
+                    |
+                    v
+              Backpropagation
 
 ```
 
