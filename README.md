@@ -35,6 +35,26 @@ Where:
 ```
 where each nucleus is represented as a separate instance and can then be classified.
 
+## Dataset
+The PanNuke dataset is a semi-automatically generated pathology dataset for nuclear instance segmentation, comprehensively covering nuclear labels of 19 different tissue types. The dataset contains a total of 7,904 images and 205,343 annotated nuclei, each with an instance segmentation mask and corresponding cell type labels (tumor epithelial cells, inflammatory cells, connective tissue cells) 
+
+The training pipeline uses:
+```
+Histopathology image
+Binary nuclear mask
+Instance-level nucleus map
+Horizontal displacement map
+Vertical displacement map
+Nucleus class labels for classification
+```
+
+Images are processed at:
+
+```
+256 × 256
+```
+
+
 ## Solution
 
 The model uses a Swin-Unet backbone with three output heads:
@@ -81,24 +101,6 @@ The pipeline has two main stages:
 Instance segmentation — detect and separate individual nuclei.
 Classification — use Swin features from each detected nucleus to predict its class.
 
-## Dataset
-The PanNuke dataset is a semi-automatically generated pathology dataset for nuclear instance segmentation, comprehensively covering nuclear labels of 19 different tissue types. The dataset contains a total of 7,904 images and 205,343 annotated nuclei, each with an instance segmentation mask and corresponding cell type labels (tumor epithelial cells, inflammatory cells, connective tissue cells) 
-
-The training pipeline uses:
-```
-Histopathology image
-Binary nuclear mask
-Instance-level nucleus map
-Horizontal displacement map
-Vertical displacement map
-Nucleus class labels for classification
-```
-
-Images are processed at:
-
-```
-256 × 256
-```
 
 ## Model
 
