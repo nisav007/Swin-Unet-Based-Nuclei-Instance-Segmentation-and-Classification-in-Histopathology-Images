@@ -151,52 +151,6 @@ The H/V predictions are converted into center votes during inference.
                     Backpropagation
 
 ```
-### Classification model training
-```
-
-
-
-             TRAINING IMAGE
-                    |
-                    v
-          +-------------------+
-          | Trained Swin      |
-          | Encoder           |
-          +-------------------+
-                    |
-                    v
-             Swin Feature Maps
-                    |
-                    + <--------- Ground-truth
-                    |             Instance Mask
-                    v
-          +-------------------+
-          | Masked Feature    |
-          | Pooling            |
-          +-------------------+
-                    |
-                    v
-          Nucleus Embedding
-              (1344-D)
-                    |
-                    + <--------- Ground-truth
-                    |             Nucleus Class
-                    v
-          +-------------------+
-          | Classification    |
-          | FC Neural Network |
-          +-------------------+
-                    |
-                    v
-              Predicted Class
-                    |
-                    v
-            Cross-Entropy Loss
-                    |
-                    v
-              Backpropagation
-
-```
 
 The pipeline has two main stages:
 
@@ -315,22 +269,51 @@ Once individual nucleus instances are available, the learned Swin features are u
 
 Instead of using a single pixel or simple RGB statistics, features from the entire nucleus region are aggregated.
 
+### Classification model training
 ```
-Swin Feature Map
-       |
-       +---- Predicted Nucleus Mask
+
+
+
+             TRAINING IMAGE
                     |
                     v
-           Masked Feature Pooling
+          +-------------------+
+          | Trained Swin      |
+          | Encoder           |
+          +-------------------+
                     |
                     v
-             Nucleus Feature
+             Swin Feature Maps
+                    |
+                    + <--------- Ground-truth
+                    |             Instance Mask
+                    v
+          +-------------------+
+          | Masked Feature    |
+          | Pooling            |
+          +-------------------+
                     |
                     v
-            Classification Head
+          Nucleus Embedding
+              (1344-D)
+                    |
+                    + <--------- Ground-truth
+                    |             Nucleus Class
+                    v
+          +-------------------+
+          | Classification    |
+          | FC Neural Network |
+          +-------------------+
                     |
                     v
-              Nucleus Class
+              Predicted Class
+                    |
+                    v
+            Cross-Entropy Loss
+                    |
+                    v
+              Backpropagation
+
 ```
 
 For each nucleus instance, the corresponding instance mask is projected onto the Swin feature map and used to pool the features inside that nucleus.
