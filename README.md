@@ -389,15 +389,13 @@ The instance_map ensures that votes from different touching nuclei are handled a
 Current segmentation results:
 | Metric              |      Result |
 | ------------------- | ----------: |
-| Dice                |   **0.801** |
-| H MAE               |  **0.0200** |
-| V MAE               |  **0.0192** |
-| H Correlation       |   **0.838** |
-| V Correlation       |   **0.862** |
-| Mean Center Error   | **2.41 px** |
-| Median Center Error | **2.14 px** |
-| Mean Vote Spread    | **6.36 px** |
-| Median Vote Spread  | **5.03 px** |
+| Dice                |   0.801 |
+| H Correlation       |   0.838 |
+| V Correlation       |   0.862 |
+| Mean Center Error   | 2.41 px |
+| Median Center Error | 2.14 px |
+| Mean Vote Spread    | 6.36 px |
+| Median Vote Spread  | 5.03 px |
 ```
 
 
@@ -406,18 +404,8 @@ Current segmentation results:
 GT nucleus pixels        : 170,560
 Predicted nucleus pixels : 214,318
 Correct nucleus pixels   : 156,806
-GT nucleus pixels        : 170,560
-Predicted nucleus pixels : 214,318
-Correct nucleus pixels   : 156,806
 ```
-H/V predictions compared with a zero-displacement baseline:
-```
-| Model         |      H MAE |      V MAE |
-| ------------- | ---------: | ---------: |
-| Zero baseline |     0.0385 |     0.0369 |
-| Model         | **0.0200** | **0.0192** |
 
-```
 The model learns meaningful center-directed displacement fields rather than simply predicting values close to zero.
 
 ## Center Vote Analysis
