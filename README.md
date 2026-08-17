@@ -115,8 +115,8 @@ The H/V predictions are converted into center votes during inference.
                     +-----------------------+
                     |  Predicted Center     |
                     |                       |
-                    | x_pred = x + H_pred  |
-                    | y_pred = y + V_pred  |
+                    | x_pred = x + H_pred   |
+                    | y_pred = y + V_pred   |
                     +-----------+-----------+
                                 |
                                 |
