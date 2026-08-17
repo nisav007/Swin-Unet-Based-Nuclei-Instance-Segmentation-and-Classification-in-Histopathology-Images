@@ -104,9 +104,57 @@ The H/V predictions are converted into center votes during inference.
                                       |
                                       v
                                Backpropagation
+
+
+```
+                 H_pred                    V_pred
+                    |                        |
+                    +-----------+------------+
+                                |
+                                v
+                    +-----------------------+
+                    |  Predicted Center     |
+                    |                       |
+                    | x_pred = x + H_pred  |
+                    | y_pred = y + V_pred  |
+                    +-----------+-----------+
+                                |
+                                |
+              Ground Truth     |     Predicted
+              Instance Map     |     Center
+                    |           |
+                    v           v
+          +----------------------------------+
+          | Group pixels belonging to        |
+          | the same nucleus instance        |
+          +----------------+-----------------+
+                           |
+                           v
+          +------------------------------------------+ |
+          | Centroid of  predicted centroid for each   |
+          | nucleus                                    |
+          +----------------+-------------------------+ |
+                           |
+                           |
+                           v
+                 +---------------------+  |
+                 | Mean Squared Error     |
+                 |       (MSE)            |
+                 |   ((X-X_pred)/**2) /2  |
+                 +---------+-------------+
+                           |
+                           v
+                 Center Consistency
+                       Loss
+                           |
+                           v
+                    Backpropagation
+
 ```
 ### Classification model training
 ```
+
+
 
              TRAINING IMAGE
                     |
