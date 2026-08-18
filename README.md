@@ -110,6 +110,7 @@ The H/V predictions are converted into center votes during inference.
 
 
 ```
+### Center Consistency Loss
                  H_pred                    V_pred
                     |                        |
                     +-----------+------------+
