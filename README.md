@@ -110,7 +110,9 @@ The H/V predictions are converted into center votes during inference.
 
 
 ```
+
 ### Center Consistency Loss
+```
                  H_pred                    V_pred
                     |                        |
                     +-----------+------------+
@@ -156,10 +158,6 @@ The H/V predictions are converted into center votes during inference.
 
 ```
 
-The pipeline has two main stages:
-
-Instance segmentation — detect and separate individual nuclei.
-Classification — use Swin features from each detected nucleus to predict its class.
 
 
 ## Model
