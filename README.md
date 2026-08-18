@@ -44,7 +44,7 @@ Where:
 1 = Nucleus 1
 2 = Nucleus 2
 ```
-Generated Mask from Segemntation Model
+Generated Mask from Segmentation Model
 ```text
 Two touching nuclei
 
