@@ -29,16 +29,6 @@ Nuclei in histopathology images frequently touch or overlap.
 
 A standard binary segmentation model can identify the nuclear region but may merge multiple touching nuclei into a single connected object.
 
-```text
-Two touching nuclei
-
-   █████████████
- █████████████████
- █████████████████
-   █████████████
-
-```
-For downstream analysis, we need:
 
 ```text
 Two touching nuclei as separate instances
@@ -54,7 +44,19 @@ Where:
 1 = Nucleus 1
 2 = Nucleus 2
 ```
-where each nucleus is represented as a separate instance and can then be classified.
+Generated Mask from Segemntation Model
+```text
+Two touching nuclei
+
+   █████████████
+ █████████████████
+ █████████████████
+   █████████████
+
+```
+
+
+
 
 ## Solution
 
